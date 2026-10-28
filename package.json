@@ -1,0 +1,15 @@
+{
+  "name": "yh-sms-reconciliation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portable DeepSeek Harness/MCP wrapper for the Yonghui SMS reconciliation workflow",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "mcp": "node mcp/server.js",
+    "check": "node --check src/server.js && node --check src/seastar-export.js && node --check mcp/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

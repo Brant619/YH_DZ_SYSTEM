@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#122033">
+  <link rel="icon" href="data:,">
+  <title>永辉短信对账系统</title>
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">YH</div>
+      <div>
+        <strong>短信对账</strong>
+        <span>SMS Reconciliation</span>
+      </div>
+    </div>
+    <nav class="nav" aria-label="系统栏目">
+      <div class="nav-group open" data-nav-group>
+        <div class="nav-parent">
+          <a class="active" href="#one-click-summary" data-view-link="oneClick">YH汇总账单一键生成</a>
+          <button class="nav-toggle" type="button" aria-label="展开或收起汇总账单一键生成子模块" aria-expanded="true" data-nav-toggle>⌄</button>
+        </div>
+        <div class="nav-children">
+          <a href="#export-summary" data-view-link="export">YH导出汇总账单</a>
+          <a href="#organize-summary" data-view-link="organize">YH汇总账单整理</a>
+          <a href="#hmt-import" data-view-link="hmt">YH港澳台账单导入</a>
+          <a href="#ai-short-import" data-view-link="aiShort">AI挂短账单导入</a>
+        </div>
+      </div>
+
+      <div class="nav-group" data-nav-group>
+        <div class="nav-parent">
+          <a href="#expense-compare" data-view-link="expenseCompare">费用对比</a>
+        </div>
+      </div>
+
+      <div class="nav-group" data-nav-group>
+        <div class="nav-parent">
+          <a href="#combined-workbook" data-view-link="combinedWorkbook">账单合并</a>
+        </div>
+      </div>
+
+      <div class="nav-group" data-nav-group>
+        <div class="nav-parent">
+          <a href="#filter-bills" data-view-link="filterBills">筛选账单</a>
+        </div>
+      </div>
+
+      <div class="nav-group" data-nav-group>
+        <div class="nav-parent">
+          <a href="#feishu-communication-third-party" data-view-link="feishuCommunicationThirdParty">飞书沟通（三方群）</a>
+        </div>
+      </div>
+
+      <div class="nav-group" data-nav-group>
+        <div class="nav-parent">
+          <a href="#feishu-internal-reconciliation" data-view-link="feishuInternalReconciliation">飞书推送（内部对账）</a>
+        </div>
+      </div>
+
+      <div class="nav-group" data-nav-group>
+        <div class="nav-parent">
+          <a href="#invoice-reconciliation" data-view-link="invoiceReconciliation">发票核对整理</a>
+        </div>
+      </div>
+
+      <div class="nav-group" data-nav-group>
+        <div class="nav-parent">
+          <a href="#latest-detail-export" data-view-link="latestDetailExport">最新明细导出</a>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">短信通道 / 财务对账</p>
+        <h1 id="page-title">汇总账单一键生成</h1>
+      </div>
+    </header>
+
+    <section id="export-summary" class="view" data-view="export">
+      <div class="panel action-panel">
+        <div>
+          <p class="eyebrow">功能 1</p>
+          <h2>导出汇总账单</h2>
+          <p>从海星短信账单页导出账单，并保存到指定账期文件夹。</p>
+        </div>
+        <div class="action-controls">
+          <label for="bill-month">账期</label>
+          <input id="bill-month" type="month">
+          <button id="export-summary-bill" class="primary-export" type="button">
+            <span class="button-icon" aria-hidden="true">→</span>
+            <span>导出汇总账单</span>
+          </button>
+        </div>
+        <div id="export-result" class="result" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="organize-summary" class="view" data-view="organize">
+      <div class="panel action-panel">
+        <div>
+          <p class="eyebrow">功能 2</p>
+          <h2>汇总账单整理</h2>
+          <p>核对格式异常，生成合并居中、自动列宽、可筛选的整理账单。</p>
+        </div>
+        <div class="action-controls">
+          <label for="organize-month">账期</label>
+          <input id="organize-month" type="month">
+          <button id="organize-summary-bill" class="primary-export" type="button">
+            <span class="button-icon" aria-hidden="true">✓</span>
+            <span>开始整理</span>
+          </button>
+        </div>
+        <div id="organize-result" class="result" role="status" aria-live="polite"></div>
+      </div>
+
+      <div id="organize-report" class="panel report-panel hidden">
+        <h2>整理结果</h2>
+        <div id="organize-report-body" class="report-body"></div>
+      </div>
+    </section>
+
+    <section id="hmt-import" class="view" data-view="hmt">
+      <div class="panel action-panel">
+        <div>
+          <p class="eyebrow">功能 3</p>
+          <h2>港澳台账单导入</h2>
+          <p>下载港澳台账单，并将江西聚梦中签名包含港澳台的明细追加到整理账单底部。</p>
+        </div>
+        <div class="action-controls">
+          <label for="hmt-month">账期</label>
+          <input id="hmt-month" type="month">
+          <input id="hmt-url" class="url-input" type="url" placeholder="输入账单下载 URL">
+          <button id="import-hmt-bill" class="primary-export" type="button">
+            <span class="button-icon" aria-hidden="true">→</span>
+            <span>下载账单</span>
+          </button>
+          <button id="append-hmt-bill" class="primary-export secondary-action" type="button">
+            <span class="button-icon" aria-hidden="true">+</span>
+            <span>追加到整理账单</span>
+          </button>
+        </div>
+        <div id="hmt-result" class="result" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="ai-short-import" class="view" data-view="aiShort">
+      <div class="panel action-panel">
+        <div>
+          <p class="eyebrow">功能 4</p>
+          <h2>AI挂短账单导入</h2>
+          <p>导入 AI 语音挂短账单，提取永辉语音 AI 行中的语音费用和挂短费用，并追加到整理账单。</p>
+        </div>
+        <div class="action-controls">
+          <label for="ai-short-month">账期</label>
+          <input id="ai-short-month" type="month">
+          <input id="ai-short-file" class="file-input" type="file" accept=".xlsx,.xls,.csv">
+          <button id="import-ai-short-bill" class="primary-export" type="button">
+            <span class="button-icon" aria-hidden="true">+</span>
+            <span>导入账单</span>
+          </button>
+          <button id="append-ai-short-bill" class="primary-export secondary-action" type="button">
+            <span class="button-icon" aria-hidden="true">+</span>
+            <span>追加到整理账单</span>
+          </button>
+        </div>
+        <div id="ai-short-result" class="result" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="one-click-summary" class="view active" data-view="oneClick">
+      <div class="panel one-click-panel">
+        <div>
+          <p class="eyebrow">功能 5</p>
+          <h2>汇总账单一键生成</h2>
+          <p>按完整流程生成整理账单，并自动追加已导入的港澳台、AI挂短和AI语音账单。</p>
+        </div>
+
+        <div class="flow-line" aria-label="汇总账单生成流程">
+          <div class="flow-step">
+            <strong>导出汇总账单</strong>
+            <span>海星短信账单</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <strong>汇总账单整理</strong>
+            <span>生成整理版 XLSX</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <strong>港澳台追加</strong>
+            <span>有账单则追加</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <strong>AI挂短/AI语音追加</strong>
+            <span>有账单则追加</span>
+          </div>
+        </div>
+
+        <div class="action-controls one-click-controls">
+          <label for="one-click-month">账期</label>
+          <input id="one-click-month" type="month">
+          <input id="one-click-hmt-url" class="url-input" type="url" placeholder="港澳台账单下载 URL（可选）">
+          <label for="one-click-ai-short-file">AI语音挂短账单文件</label>
+          <input id="one-click-ai-short-file" class="file-input" type="file" accept=".xlsx,.xls,.csv">
+          <button id="generate-one-click-bill" class="primary-export" type="button">
+            <span class="button-icon" aria-hidden="true">✓</span>
+            <span>一键生成汇总账单</span>
+          </button>
+        </div>
+
+        <div id="one-click-result" class="result" role="status" aria-live="polite"></div>
+        <div id="one-click-report" class="one-click-report"></div>
+      </div>
+    </section>
+
+    <section id="expense-compare" class="view" data-view="expenseCompare">
+      <div class="panel one-click-panel">
+        <div>
+          <p class="eyebrow">费用对比</p>
+          <h2>费用对比生成</h2>
+          <p>导入永辉整理账单、江西聚梦、北京凌渡、京东和腾域账单，生成费用对比 Excel。</p>
+        </div>
+
+        <div class="flow-line" aria-label="费用对比生成流程">
+          <div class="flow-step">
+            <strong>永辉整理账单</strong>
+            <span>汇总账单一键生成结果</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <strong>江西聚梦账单</strong>
+            <span>短信/港澳台 + AI语音挂短</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <strong>北京凌渡</strong>
+            <span>费用小计</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <strong>京东</strong>
+            <span>结算单总金额</span>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <strong>费用对比表</strong>
+            <span>自动套用对比模板逻辑</span>
+          </div>
+        </div>
+
+        <div class="expense-file-grid">
+          <label class="file-field" for="expense-yh-file">
+            <span>永辉整理账单</span>
+            <input id="expense-yh-file" class="file-input" type="file" accept=".xlsx,.xls">
+          </label>
+          <label class="file-field" for="expense-jm-file">
+            <span>江西聚梦短信/港澳台账单</span>
+            <input id="expense-jm-file" class="file-input" type="file" accept=".xlsx,.xls">
+          </label>
+          <label class="file-field" for="expense-jm-ai-file">
+            <span>江西聚梦AI语音挂短账单</span>
+            <input id="expense-jm-ai-file" class="file-input" type="file" accept=".xlsx,.xls">
+          </label>
+          <label class="file-field" for="expense-beijing-file">
+            <span>北京凌渡账单</span>
+            <input id="expense-beijing-file" class="file-input" type="file" accept=".xlsx,.xls">
+          </label>
+          <label class="file-field" for="expense-tengyu-file"><span>腾域账单</span><input id="expense-tengyu-file" class="file-input" type="file" accept=".xlsx,.xls"></label>
+          <label class="file-field" for="expense-jd-file">
+            <span>京东账单</span>
+            <input id="expense-jd-file" class="file-input" type="file" accept=".xlsx,.xls">
+          </label>
+        </div>
+
+        <div class="action-controls one-click-controls">
+          <label for="expense-month">账期</label>
+          <input id="expense-month" type="month">
+          <button id="generate-expense-compare" class="primary-export" type="button">
+            <span class="button-icon" aria-hidden="true">✓</span>
+            <span>一键生成费用对比</span>
+          </button>
+        </div>
+
+        <div id="expense-compare-result" class="result" role="status" aria-live="polite"></div>
+        <div id="expense-compare-report" class="one-click-report"></div>
+      </div>
+    </section>
+
+    <section id="combined-workbook" class="view" data-view="combinedWorkbook">
+      <div class="panel action-panel">
+        <div>
+          <p class="eyebrow">账单合并</p>
+          <h2>合并到一张 Excel</h2>
+          <p>将整理后的汇总账单和费用对比表合并到同一个工作簿中，后续筛选账单统一从合并账单读取。</p>
+        </div>
+        <div class="action-controls">
+          <label for="combined-workbook-month">账期</label>
+          <input id="combined-workbook-month" type="month">
+          <button id="combine-workbooks" class="primary-export" type="button">
+            <span class="button-icon" aria-hidden="true">✓</span>
+            <span>生成合并 Excel</span>
+          </button>
+        </div>
+        <div id="combined-workbook-result" class="result" role="status" aria-live="polite"></div>
+        <div id="combined-workbook-report" class="one-click-report"></div>
+      </div>
+    </section>
+
+    <section id="feishu-communication-third-party" class="view" data-view="feishuCommunicationThirdParty">
+      <div class="panel action-panel">
+        <div>
+          <p class="eyebrow">飞书沟通</p>
+          <h2>飞书沟通（三方群）</h2>
+          <p>从费用对比表读取金额，按话术模板生成江西聚梦、京东、北京凌渡、腾域四方群沟通内容。</p>
+        </div>
+        <div class="action-controls">
+          <label for="feishu-third-party-month">账期</label>
+          <input id="feishu-third-party-month" type="month">
+          <button id="generate-feishu-third-party-script" class="primary-export" type="button">
+            <span class="button-icon" aria-hidden="true">✓</span>
+            <span>生成话术</span>
+          </button>
+        </div>
+        <div id="feishu-third-party-result" class="result" role="status" aria-live="polite"></div>
+        <div id="feishu-third-party-report" class="script-report"></div>
+      </div>
+    </section>
+
+    <section id="feishu-internal-reconciliation" class="view" data-view="feishuInternalReconciliation">
+      <div class="panel action-panel">
+        <div>
+          <p class="eyebrow">飞书推送</p>
+          <h2>飞书推送（内部对账）</h2>
+          <p>从账单合并的“汇总对账单”按账号编码截取截图，并生成可复制到飞书群的内部对账话术。</p>
+        </div>
+        <div class="action-controls">
+          <label for="feishu-internal-month">账期</label>
+          <input id="feishu-internal-month" type="month">
+          <label for="feishu-internal-cutoff">截止时间</label>
+          <input id="feishu-internal-cutoff" type="datetime-local">
+          <button id="check-internal-accounts" class="secondary-action compact-action" type="button">
+            <span class="button-icon" aria-hidden="true">✓</span>
+            <span>校验账号完整性</span>
+          </button>
+          <button id="generate-feishu-internal" class="primary-export" type="button">
+            <span class="button-icon" aria-hidden="true">✓</span>
+            <span>生成截图和话术</span>
+          </button>
+        </div>
+        <div id="internal-account-check-result" class="account-check-result" role="status" aria-live="polite"></div>
+        <div id="feishu-internal-result" class="result" role="status" aria-live="polite"></div>
+        <div id="feishu-internal-report" class="script-report"></div>
+      </div>
+
+      <div class="panel internal-groups-panel">
+        <div class="internal-groups-head">
+          <div>
+            <p class="eyebrow">账号组维护</p>
+            <h2>内部对账账号组</h2>
+          </div>
+          <div class="actions">
+            <button id="add-internal-group" class="secondary-action" type="button">新增账号组</button>
+            <button id="save-internal-groups" class="primary-export compact-action" type="button">保存账号组</button>
+          </div>
+        </div>
+        <p class="panel-note">账号编码用逗号或换行分隔，对接人用逗号分隔。对接人为顾佳雯的账号会自动归入“科技部”，无需手工维护。</p>
+        <div id="internal-groups-editor" class="internal-groups-editor"></div>
+        <div id="internal-groups-result" class="result" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="filter-bills" class="view" data-view="filterBills">
+      <div class="panel filter-bills-panel">
+        <div class="filter-bills-head">
+          <div>
+            <p class="eyebrow">账单筛选</p>
+            <h2>筛选账单</h2>
+            <p>统一选择账期，分别生成四类筛选账单。</p>
+          </div>
+          <div class="action-controls filter-shared-controls">
+            <label for="filter-bills-month">账期</label>
+            <input id="filter-bills-month" type="month">
+          </div>
+        </div>
+
+        <div class="filter-bills-list">
+          <div class="filter-bill-row">
+            <div class="filter-bill-info">
+              <strong>江西聚梦</strong>
+              <span>筛选通道名为江西聚梦的账单明细</span>
+            </div>
+            <button id="filter-jiangxi-jumeng" class="primary-export" type="button">
+              <span class="button-icon" aria-hidden="true">✓</span>
+              <span>生成筛选账单</span>
+            </button>
+            <div id="jiangxi-jumeng-result" class="result" role="status" aria-live="polite"></div>
+          </div>
+
+          <div class="filter-bill-row">
+            <div class="filter-bill-info">
+              <strong>北京凌渡</strong>
+              <span>筛选通道名为北京凌渡的账单明细</span>
+            </div>
+            <button id="filter-beijing-lingdu" class="primary-export" type="button">
+              <span class="button-icon" aria-hidden="true">✓</span>
+              <span>生成筛选账单</span>
+            </button>
+            <div id="beijing-lingdu-result" class="result" role="status" aria-live="polite"></div>
+          </div>
+
+          <div class="filter-bill-row">
+            <div class="filter-bill-info">
+              <strong>京东</strong>
+              <span>筛选通道名为京东的账单明细</span>
+            </div>
+            <button id="filter-jingdong" class="primary-export" type="button">
+              <span class="button-icon" aria-hidden="true">✓</span>
+              <span>生成筛选账单</span>
+            </button>
+            <div id="jingdong-result" class="result" role="status" aria-live="polite"></div>
+          </div>
+
+          <div class="filter-bill-row">
+            <div class="filter-bill-info"><strong>腾域</strong><span>筛选通道名为腾域的账单明细</span></div>
+            <button id="filter-tengyu" class="primary-export" type="button"><span class="button-icon" aria-hidden="true">✓</span><span>生成筛选账单</span></button>
+            <div id="tengyu-result" class="result" role="status" aria-live="polite"></div>
+          </div>
+
+          <div class="filter-bill-row">
+            <div class="filter-bill-info">
+              <strong>科技账单</strong>
+              <span>筛选对接人为顾佳雯的账单明细</span>
+            </div>
+            <button id="filter-tech-bill" class="primary-export" type="button">
+              <span class="button-icon" aria-hidden="true">✓</span>
+              <span>生成筛选账单</span>
+            </button>
+            <div id="tech-bill-result" class="result" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="invoice-reconciliation" class="view" data-view="invoiceReconciliation">
+      <div id="invoice-jiangxi-jumeng" class="invoice-provider-section">
+      <div class="panel invoice-workflow-panel">
+        <div>
+          <p class="eyebrow">发票核对整理</p>
+          <h2>江西聚梦</h2>
+          <p>将供应商压缩包归档到对应账期，解压后识别账单与发票内容并统一文件名。</p>
+        </div>
+
+        <div class="invoice-flow" aria-label="江西聚梦发票整理流程">
+          <div class="invoice-step">
+            <span class="invoice-step-number">1</span>
+            <div>
+              <strong>归档并解压</strong>
+              <span>保留原 ZIP 和解压目录</span>
+            </div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="invoice-step">
+            <span class="invoice-step-number">2</span>
+            <div>
+              <strong>读取 PDF</strong>
+              <span>识别账号编码与合计金额</span>
+            </div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="invoice-step">
+            <span class="invoice-step-number">3</span>
+            <div>
+              <strong>统一命名</strong>
+              <span>月份-账号编码-金额-类型-账号名（科技部除外）</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="invoice-controls">
+          <label class="invoice-month-field" for="invoice-jm-month">
+            <span>账期</span>
+            <input id="invoice-jm-month" type="month">
+          </label>
+          <label class="file-field invoice-archive-field" for="invoice-jm-archive">
+            <span>供应商发票压缩包</span>
+            <input id="invoice-jm-archive" class="file-input" type="file" accept=".zip,application/zip">
+          </label>
+          <div class="invoice-actions">
+            <button id="archive-invoice-jm" class="primary-export" type="button">
+              <span class="button-icon" aria-hidden="true">↓</span>
+              <span>归档并解压</span>
+            </button>
+            <button id="organize-invoice-jm" class="primary-export secondary-action" type="button">
+              <span class="button-icon" aria-hidden="true">✓</span>
+              <span>整理 PDF 文件名</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="invoice-jm-result" class="result" role="status" aria-live="polite"></div>
+      </div>
+
+      <div id="invoice-jm-report" class="panel invoice-report hidden">
+        <div class="invoice-report-head">
+          <div>
+            <p class="eyebrow">处理结果</p>
+            <h2>文件识别与命名明细</h2>
+          </div>
+          <span id="invoice-jm-summary" class="invoice-summary"></span>
+        </div>
+        <div class="invoice-table-wrap">
+          <table class="invoice-result-table">
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>原文件名</th>
+                <th>账号编码</th>
+                <th>金额</th>
+                <th>新文件名 / 提示</th>
+              </tr>
+            </thead>
+            <tbody id="invoice-jm-report-body"></tbody>
+          </table>
+        </div>
+      </div>
+      </div>
+
+      <div id="invoice-beijing-lingdu" class="invoice-provider-section">
+      <div class="panel invoice-workflow-panel">
+        <div>
+          <p class="eyebrow">发票核对整理</p>
+          <h2>北京凌渡</h2>
+          <p>将供应商压缩包归档到对应账期，解压后识别账单与发票内容并统一文件名。</p>
+        </div>
+
+        <div class="invoice-flow" aria-label="北京凌渡发票整理流程">
+          <div class="invoice-step">
+            <span class="invoice-step-number">1</span>
+            <div>
+              <strong>归档并解压</strong>
+              <span>保留原 ZIP 和解压目录</span>
+            </div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="invoice-step">
+            <span class="invoice-step-number">2</span>
+            <div>
+              <strong>读取 PDF</strong>
+              <span>识别账号编码与合计金额</span>
+            </div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="invoice-step">
+            <span class="invoice-step-number">3</span>
+            <div>
+              <strong>统一命名</strong>
+              <span>月份-账号编码-金额-类型-账号名（科技部除外）</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="invoice-controls">
+          <label class="invoice-month-field" for="invoice-beijing-month">
+            <span>账期</span>
+            <input id="invoice-beijing-month" type="month">
+          </label>
+          <label class="file-field invoice-archive-field" for="invoice-beijing-archive">
+            <span>供应商账单发票压缩包</span>
+            <input id="invoice-beijing-archive" class="file-input" type="file" accept=".zip,application/zip">
+          </label>
+          <div class="invoice-actions">
+            <button id="archive-invoice-beijing" class="primary-export" type="button">
+              <span class="button-icon" aria-hidden="true">↓</span>
+              <span>归档并解压</span>
+            </button>
+            <button id="organize-invoice-beijing" class="primary-export secondary-action" type="button">
+              <span class="button-icon" aria-hidden="true">✓</span>
+              <span>整理 PDF 文件名</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="invoice-beijing-result" class="result" role="status" aria-live="polite"></div>
+      </div>
+
+      <div id="invoice-beijing-report" class="panel invoice-report hidden">
+        <div class="invoice-report-head">
+          <div>
+            <p class="eyebrow">处理结果</p>
+            <h2>文件识别与命名明细</h2>
+          </div>
+          <span id="invoice-beijing-summary" class="invoice-summary"></span>
+        </div>
+        <div class="invoice-table-wrap">
+          <table class="invoice-result-table">
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>原文件名</th>
+                <th>账号编码</th>
+                <th>金额</th>
+                <th>新文件名 / 提示</th>
+              </tr>
+            </thead>
+            <tbody id="invoice-beijing-report-body"></tbody>
+          </table>
+        </div>
+      </div>
+      </div>
+
+      <div id="invoice-jingdong" class="invoice-provider-section">
+      <div class="panel invoice-workflow-panel">
+        <div>
+          <p class="eyebrow">发票核对整理</p>
+          <h2>京东</h2>
+          <p>将供应商压缩包归档到对应账期，解压后识别账单与发票内容并统一文件名。</p>
+        </div>
+
+        <div class="invoice-flow" aria-label="京东发票整理流程">
+          <div class="invoice-step">
+            <span class="invoice-step-number">1</span>
+            <div>
+              <strong>归档并解压</strong>
+              <span>保留原 ZIP 和解压目录</span>
+            </div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="invoice-step">
+            <span class="invoice-step-number">2</span>
+            <div>
+              <strong>读取 PDF</strong>
+              <span>识别账号编码与合计金额</span>
+            </div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="invoice-step">
+            <span class="invoice-step-number">3</span>
+            <div>
+              <strong>统一命名</strong>
+              <span>月份-账号编码-金额-类型-账号名（科技部除外）</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="invoice-controls">
+          <label class="invoice-month-field" for="invoice-jingdong-month">
+            <span>账期</span>
+            <input id="invoice-jingdong-month" type="month">
+          </label>
+          <label class="file-field invoice-archive-field" for="invoice-jingdong-archive">
+            <span>供应商账单发票压缩包</span>
+            <input id="invoice-jingdong-archive" class="file-input" type="file" accept=".zip,application/zip">
+          </label>
+          <div class="invoice-actions">
+            <button id="archive-invoice-jingdong" class="primary-export" type="button">
+              <span class="button-icon" aria-hidden="true">↓</span>
+              <span>归档并解压</span>
+            </button>
+            <button id="organize-invoice-jingdong" class="primary-export secondary-action" type="button">
+              <span class="button-icon" aria-hidden="true">✓</span>
+              <span>整理 PDF 文件名</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="invoice-jingdong-result" class="result" role="status" aria-live="polite"></div>
+      </div>
+
+      <div id="invoice-jingdong-report" class="panel invoice-report hidden">
+        <div class="invoice-report-head">
+          <div>
+            <p class="eyebrow">处理结果</p>
+            <h2>文件识别与命名明细</h2>
+          </div>
+          <span id="invoice-jingdong-summary" class="invoice-summary"></span>
+        </div>
+        <div class="invoice-table-wrap">
+          <table class="invoice-result-table">
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>原文件名</th>
+                <th>账号编码</th>
+                <th>金额</th>
+                <th>新文件名 / 提示</th>
+              </tr>
+            </thead>
+            <tbody id="invoice-jingdong-report-body"></tbody>
+          </table>
+        </div>
+      </div>
+      </div>
+
+      <div id="invoice-tengyu" class="invoice-provider-section">
+      <div class="panel invoice-workflow-panel">
+        <div>
+          <p class="eyebrow">发票核对整理</p>
+          <h2>腾域</h2>
+          <p>将供应商压缩包归档到对应账期，解压后识别账单与发票内容并统一文件名。</p>
+        </div>
+
+        <div class="invoice-flow" aria-label="腾域发票整理流程">
+          <div class="invoice-step">
+            <span class="invoice-step-number">1</span>
+            <div>
+              <strong>归档并解压</strong>
+              <span>保留原 ZIP 和解压目录</span>
+            </div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="invoice-step">
+            <span class="invoice-step-number">2</span>
+            <div>
+              <strong>读取 PDF</strong>
+              <span>识别账号编码与合计金额</span>
+            </div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="invoice-step">
+            <span class="invoice-step-number">3</span>
+            <div>
+              <strong>统一命名</strong>
+              <span>月份-账号编码-金额-类型-账号名（科技部除外）</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="invoice-controls">
+          <label class="invoice-month-field" for="invoice-tengyu-month">
+            <span>账期</span>
+            <input id="invoice-tengyu-month" type="month">
+          </label>
+          <label class="file-field invoice-archive-field" for="invoice-tengyu-archive">
+            <span>供应商账单发票压缩包</span>
+            <input id="invoice-tengyu-archive" class="file-input" type="file" accept=".zip,application/zip">
+          </label>
+          <div class="invoice-actions">
+            <button id="archive-invoice-tengyu" class="primary-export" type="button">
+              <span class="button-icon" aria-hidden="true">↓</span>
+              <span>归档并解压</span>
+            </button>
+            <button id="organize-invoice-tengyu" class="primary-export secondary-action" type="button">
+              <span class="button-icon" aria-hidden="true">✓</span>
+              <span>整理 PDF 文件名</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="invoice-tengyu-result" class="result" role="status" aria-live="polite"></div>
+      </div>
+
+      <div id="invoice-tengyu-report" class="panel invoice-report hidden">
+        <div class="invoice-report-head">
+          <div>
+            <p class="eyebrow">处理结果</p>
+            <h2>文件识别与命名明细</h2>
+          </div>
+          <span id="invoice-tengyu-summary" class="invoice-summary"></span>
+        </div>
+        <div class="invoice-table-wrap">
+          <table class="invoice-result-table">
+            <thead>
+              <tr>
+                <th>类型</th>
+                <th>原文件名</th>
+                <th>账号编码</th>
+                <th>金额</th>
+                <th>新文件名 / 提示</th>
+              </tr>
+            </thead>
+            <tbody id="invoice-tengyu-report-body"></tbody>
+          </table>
+        </div>
+      </div>
+      </div>
+
+      <div class="invoice-provider-section">
+      <div class="panel invoice-workflow-panel">
+        <div>
+          <p class="eyebrow">渠道商合并</p>
+          <h2>按内部对账账号组汇集账单和发票</h2>
+          <p>将四个渠道商已命名的 PDF 按“飞书推送（内部对账）”账号组复制到同一账期子文件夹中。</p>
+        </div>
+
+        <div class="invoice-controls invoice-merge-controls">
+          <label class="invoice-month-field" for="invoice-merge-month">
+            <span>账期</span>
+            <input id="invoice-merge-month" type="month">
+          </label>
+          <div class="invoice-actions">
+            <button id="merge-invoice-pdfs-by-account" class="primary-export secondary-action" type="button">
+              <span class="button-icon" aria-hidden="true">⊕</span>
+              <span>按内部账号组合并</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="invoice-merge-result" class="result" role="status" aria-live="polite"></div>
+      </div>
+      </div>
+    </section>
+
+    <section id="latest-detail-export" class="view" data-view="latestDetailExport">
+      <div class="panel action-panel">
+        <div>
+          <p class="eyebrow">导出功能</p>
+          <h2>最新明细导出</h2>
+          <p>粘贴永辉平台生成的最新明细下载 URL，系统会下载并把文件保存到“最新明细导出”目录。</p>
+        </div>
+        <div class="action-controls">
+          <input
+            id="latest-detail-url"
+            class="url-input latest-detail-url"
+            type="url"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="粘贴完整的最新明细下载 URL"
+          >
+          <button id="export-latest-detail" class="primary-export" type="button">
+            <span class="button-icon" aria-hidden="true">↓</span>
+            <span>导出最新明细</span>
+          </button>
+        </div>
+        <button
+          id="fill-latest-detail-url"
+          class="latest-detail-prefix"
+          type="button"
+          title="点击将固定地址填入输入框"
+        >
+          <span>固定地址</span>
+          <code>https://taiyi.yonghui.cn/s/it-service-sms-alert/v1/report/smsData/</code>
+          <span>点击填入</span>
+        </button>
+        <div id="latest-detail-result" class="result" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "systemName": "永辉短信对账系统",
+  "dataDirectory": "D:\\YH\\永辉短信对账",
+  "seastar": {
+    "homeUrl": "https://seastar.yonghuivip.com/",
+    "smsBillUrl": "https://seastar.yonghuivip.com/itservice/sms/sms_bill",
+    "browserProfileDirectory": "D:\\YH\\永辉短信对账\\ai\\edge-profile",
+    "debugPort": 9333,
+    "username": "",
+    "password": ""
+  },
+  "features": {
+    "exportSummaryBill": true
+  }
+}

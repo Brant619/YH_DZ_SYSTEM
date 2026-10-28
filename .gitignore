@@ -1,0 +1,25 @@
+# Local machine configuration and credentials
+config/local.json
+config/*.local.json
+.env
+
+# Reconciliation data must stay outside this repository
+data/
+*.xlsx
+*.xls
+*.csv
+*.zip
+*.pdf
+
+# Runtime output
+logs/
+src/edge-profile/
+src/logs/
+node_modules/
+*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
