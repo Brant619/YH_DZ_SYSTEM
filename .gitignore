@@ -13,6 +13,8 @@ data/
 
 # Runtime output
 logs/
+edge-profile/
+_legacy_*/
 src/edge-profile/
 src/logs/
 node_modules/

@@ -15,11 +15,7 @@ if (-not (Test-Path -LiteralPath $DshConfigPath)) {
   throw "DSH config was not found: $DshConfigPath"
 }
 
-$existing = Get-Content -LiteralPath $DshConfigPath -Raw
-if ($existing -match "id:\s*mcp-yh-reconciliation\b") {
-  Write-Output "DSH MCP entry already exists: $DshConfigPath"
-  exit 0
-}
+$existing = [IO.File]::ReadAllText($DshConfigPath, [Text.Encoding]::UTF8)
 
 function ConvertTo-YamlSingleQuoted([string]$Value) {
   return "'" + $Value.Replace("'", "''") + "'"
@@ -32,6 +28,7 @@ $configYaml = ConvertTo-YamlSingleQuoted $ConfigPath
 
 $block = @"
 
+# BEGIN YH-RECONCILIATION MCP
 - insert:
     - id: mcp-yh-reconciliation
       name: "@deepseek-ai/dsh-mcp-client"
@@ -46,9 +43,21 @@ $block = @"
           YH_CONFIG_PATH: $configYaml
         toolCallTimeoutMs: 900000
         failOnStartupError: false
-"@
+# END YH-RECONCILIATION MCP
+"@.Trim()
+
+$markerPattern = "(?s)# BEGIN YH-RECONCILIATION MCP.*?# END YH-RECONCILIATION MCP"
+if ($existing -match $markerPattern) {
+  $updated = [regex]::Replace($existing, $markerPattern, $block)
+} elseif ($existing -match "id:\s*mcp-yh-reconciliation\b") {
+  $legacyPattern = "(?ms)^- insert:\s*\r?\n\s+- id: mcp-yh-reconciliation\b.*?(?=^- |\z)"
+  $updated = [regex]::Replace($existing, $legacyPattern, "")
+  $updated = $updated.TrimEnd() + "`r`n`r`n" + $block + "`r`n"
+} else {
+  $updated = $existing.TrimEnd() + "`r`n`r`n" + $block + "`r`n"
+}
 
 Copy-Item -LiteralPath $DshConfigPath -Destination "$DshConfigPath.bak-yh" -Force
-Add-Content -LiteralPath $DshConfigPath -Value $block -Encoding utf8
+[IO.File]::WriteAllText($DshConfigPath, $updated, [Text.UTF8Encoding]::new($false))
 Write-Output "Installed DSH MCP entry in: $DshConfigPath"
 Write-Output "Restart DeepSeek Harness to load mcp__yh-reconciliation__* tools."

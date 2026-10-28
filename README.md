@@ -15,6 +15,12 @@
 
 ## 当前电脑首次使用
 
+当前电脑的 Git 程序目录为：
+
+```text
+D:\YH\永辉短信对账\ai
+```
+
 在项目目录打开 PowerShell：
 
 ```powershell
@@ -53,8 +59,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\install-startup.ps
 ### 2. 克隆代码
 
 ```powershell
-git clone <你的远程仓库地址> C:\Users\你的用户名\Projects\yh-sms-reconciliation
-cd C:\Users\你的用户名\Projects\yh-sms-reconciliation
+git clone <你的远程仓库地址> D:\YH\永辉短信对账\ai
+cd D:\YH\永辉短信对账\ai
 ```
 
 ### 3. 从 U 盘恢复账务数据
