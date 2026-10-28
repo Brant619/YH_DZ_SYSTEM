@@ -71,6 +71,12 @@ cd D:\YH\永辉短信对账\ai
 D:\YH\永辉短信对账
 ```
 
+只复制月份目录、`最新明细导出` 和 `internal-reconciliation-groups.json`，不要把 U 盘中的旧 `ai` 目录整体覆盖到新克隆的 Git 项目。需要复用海星登录态时，单独把其中的 `edge-profile` 复制到：
+
+```text
+D:\YH\永辉短信对账\ai\edge-profile
+```
+
 至少需要保留：
 
 ```text
